@@ -56,6 +56,12 @@ module Rack
         end
 
         def self.set(env, session)
+          puts "sessionhash set. Session: #{session}"
+          begin
+            boop
+          rescue => e
+            puts e.backtrace.join("\n")
+          end
           env[ENV_SESSION_KEY] = session
         end
 
@@ -353,6 +359,7 @@ module Rack
 
         def commit_session(env, status, headers, body)
           session = env[ENV_SESSION_KEY]
+          puts "commitsession session: #{session.to_hash}"
           options = session.options
 
           if options[:drop] || options[:renew]
@@ -365,6 +372,7 @@ module Rack
           session.send(:load!) unless loaded_session?(session)
           session_id ||= session.id
           session_data = session.to_hash.delete_if { |k,v| v.nil? }
+          puts "commitsession session2: #{session.to_hash}"
 
           if not data = set_session(env, session_id, session_data, options)
             env["rack.errors"].puts("Warning! #{self.class.name} failed to save session. Content dropped.")
