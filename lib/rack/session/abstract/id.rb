@@ -285,9 +285,11 @@ module Rack
         # metadata into 'rack.session.options'.
 
         def prepare_session(env)
+          puts "prepare_sess: #{env[ENV_SESSION_KEY]}"
           session_was                  = env[ENV_SESSION_KEY]
           env[ENV_SESSION_KEY]         = session_class.new(self, env)
           env[ENV_SESSION_OPTIONS_KEY] = @default_options.dup
+          puts "prepare_sess: #{env[ENV_SESSION_KEY]}"
           env[ENV_SESSION_KEY].merge! session_was if session_was
         end
 
